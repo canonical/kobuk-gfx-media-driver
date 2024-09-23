@@ -1,7 +1,8 @@
 Source: intel-media-driver
 Section: video
 Priority: optional
-Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Intel Graphics Team <linux-graphics@intel.com>
 Uploaders:
  Sebastian Ramacher <sramacher@debian.org>
 Build-Depends:
@@ -9,8 +10,9 @@ Build-Depends:
  dh-sequence-libva,
  cmake,
  libdrm-dev,
- libigdgmm-dev (>= 22.4.1),
- libva-dev (>= 2.12),
+ libigdgmm-dev (>= 22.5.2),
+ libpciaccess-dev,
+ libva-dev (>= 2.22),
  libx11-dev,
  ninja-build,
  pkgconf,
