@@ -229,6 +229,23 @@ MOS_STATUS VpPipeline::UserFeatureReport()
             }
 #endif
         }
+#if (_DEBUG || _RELEASE_INTERNAL)
+        if (m_reporting->GetFeatures().isOclFC)
+        {
+            VP_PUBLIC_NORMALMESSAGE("VP OCL FC Supported");
+            ReportUserSettingForDebug(
+                m_userSettingPtr,
+                __MEDIA_USER_FEATURE_VALUE_VP_OCL_FC_SUPPORTED,
+                1,
+                MediaUserSetting::Group::Sequence);
+
+            ReportUserSettingForDebug(
+                m_userSettingPtr,
+                __MEDIA_USER_FEATURE_VALUE_VP_OCL_FC_REPORT,
+                m_reporting->GetFeatures().diffLogOclFC,
+                MediaUserSetting::Group::Sequence);
+        }
+#endif
 
         m_reporting->GetFeatures().VPApogeios = m_currentFrameAPGEnabled;
     }

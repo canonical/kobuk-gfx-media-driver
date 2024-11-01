@@ -190,6 +190,14 @@ MOS_STATUS AvcEncodeBRC::Update(void *params)
         "Encode RateControl Method",
         m_rcMode,
         MediaUserSetting::Group::Sequence);
+
+    MediaUserSetting::Value outValue;
+    ReadUserSetting(
+        m_userSettingPtr,
+        outValue,
+        "Adaptive TU Enable",
+        MediaUserSetting::Group::Sequence);
+    m_basicFeature->m_picParam->AdaptiveTUEnabled |= outValue.Get<uint8_t>();
 #endif
     return MOS_STATUS_SUCCESS;
 }
@@ -481,8 +489,16 @@ MOS_STATUS AvcEncodeBRC::SetDmemForInit(void *params)
     if (avcSeqParams->FrameSizeTolerance == EFRAMESIZETOL_LOW) // Sliding Window BRC
     {
         hucVdencBrcInitDmem->INIT_SlidingWidowRCEnable_U8 = 1;
-        hucVdencBrcInitDmem->INIT_SlidingWindowSize_U8 = (uint8_t)(avcSeqParams->FramesPer100Sec / 100);
-        hucVdencBrcInitDmem->INIT_SlidingWindowMaxRateRatio_U8 = 120;
+        if (avcSeqParams->RateControlMethod == RATECONTROL_CBR && avcSeqParams->TargetBitRate != 0)
+        {
+            hucVdencBrcInitDmem->INIT_SlidingWindowSize_U8         = MOS_MIN((uint8_t)avcSeqParams->SlidingWindowSize, 60);
+            hucVdencBrcInitDmem->INIT_SlidingWindowMaxRateRatio_U8 = (uint8_t)((uint64_t)avcSeqParams->MaxBitRatePerSlidingWindow * 100 / avcSeqParams->TargetBitRate);
+        }
+        else
+        {
+            hucVdencBrcInitDmem->INIT_SlidingWindowSize_U8         = (uint8_t)(avcSeqParams->FramesPer100Sec / 100);
+            hucVdencBrcInitDmem->INIT_SlidingWindowMaxRateRatio_U8 = 120;
+        }
     }
 
     MOS_SecureMemcpy(hucVdencBrcInitDmem->INIT_EstRateThreshP0_U8, 7 * sizeof(uint8_t),
@@ -631,6 +647,8 @@ MOS_STATUS AvcEncodeBRC::SetDmemForUpdate(void *params, uint16_t currPass, bool 
 
     hucVdencBrcUpdateDmem->UPD_PAKPassNum_U8 = (uint8_t)currPass;
     hucVdencBrcUpdateDmem->UPD_MaxNumPass_U8 = m_featureManager->GetNumPass();
+
+    hucVdencBrcUpdateDmem->UPD_AdaptiveTUEnabled = avcPicParams->AdaptiveTUEnabled;
 
     uint32_t numP = 0;
     if (avcSeqParams->GopRefDist && (avcSeqParams->GopPicSize > 0))

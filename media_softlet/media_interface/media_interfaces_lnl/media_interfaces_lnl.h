@@ -85,9 +85,12 @@
 #include "decode_vvc_pipeline_adapter_xe2_lpm.h"
 #endif
 
-#ifdef _MEDIA_RESERVED
 #ifdef _JPEG_ENCODE_SUPPORTED
-#include "encode_jpeg_pipeline_adapter_xe_lpm_plus_base.h"
+#include "encode_jpeg_pipeline_adapter.h"
+#endif
+
+#ifdef _AVC_ENCODE_VDENC_SUPPORTED
+#include "encode_avc_vdenc_pipeline_adapter_xe2_lpm.h"
 #endif
 
 #ifdef _HEVC_ENCODE_VDENC_SUPPORTED
@@ -98,10 +101,7 @@
 #include "encode_av1_vdenc_pipeline_adapter_xe2_lpm.h"
 #endif
 
-#ifdef _AVC_ENCODE_VDENC_SUPPORTED
-#include "encode_avc_vdenc_pipeline_adapter_xe2_lpm.h"
-#endif
-
+#ifdef _MEDIA_RESERVED
 #ifdef _VP9_ENCODE_VDENC_SUPPORTED
 #include "encode_vp9_vdenc_pipeline_adapter_xe2_lpm.h"
 #endif

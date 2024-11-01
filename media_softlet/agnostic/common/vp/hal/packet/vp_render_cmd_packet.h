@@ -67,6 +67,8 @@ public:
 
     virtual MOS_STATUS SetDnHVSParams(PRENDER_DN_HVS_CAL_PARAMS params);
 
+    virtual MOS_STATUS SetOclFcParams(PRENDER_OCL_FC_PARAMS params);
+
     virtual MOS_STATUS DumpOutput() override;
 
     void PrintWalkerParas(MHW_WALKER_PARAMS &WalkerParams);

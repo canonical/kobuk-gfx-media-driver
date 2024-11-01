@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2022, Intel Corporation
+* Copyright (c) 2022-2024, Intel Corporation
 *
 * Permission is hereby granted, free of charge, to any person obtaining a
 * copy of this software and associated documentation files (the "Software"),
@@ -131,6 +131,7 @@ struct _VP_MHWINTERFACE
 };
 
 using VP_MHWINTERFACE  = _VP_MHWINTERFACE;
+using PVP_MHWINTERFACE = VP_MHWINTERFACE *;
 
 class VpBase
 {
@@ -182,6 +183,11 @@ public:
     HANDLE m_gpuAppTaskEvent = nullptr;
 
     VpExtIntfBase *extIntf = nullptr;
+
+    virtual bool IsOclFCEnabled()
+    {
+        return false;
+    }
 
 protected:
     virtual bool IsApoEnabled()

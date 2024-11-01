@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2009-2023, Intel Corporation
+* Copyright (c) 2009-2024, Intel Corporation
 *
 * Permission is hereby granted, free of charge, to any person obtaining a
 * copy of this software and associated documentation files (the "Software"),
@@ -35,7 +35,7 @@
 #if (_RELEASE_INTERNAL || _DEBUG)
 #if defined(CM_DIRECT_GUC_SUPPORT)
 #include "work_queue_mngr.h"
-#include "KmGucClientInterface.h"
+#include <FirmwareManager/GpuFW/GucModule/commoninc/KmGucClientInterface.h>
 #endif
 #endif
 
@@ -190,6 +190,7 @@ typedef enum _MOS_FORCE_VEBOX
 #define MOS_FORCEENGINE_MASK                         0xf
 #define MOS_FORCEENGINE_ENGINEID_BITSNUM             4 //each VDBOX ID occupies 4 bits see defintion MOS_FORCE_VDBOX
 #define MOS_INVALID_FORCEENGINE_VALUE                0xffffffff
+#define MOS_INVALID_ENGINE_INSTANCE                  0xff // this invalid engine instance value aligns with KMD
 #endif
 
 typedef struct _MOS_VIRTUALENGINE_INTERFACE *PMOS_VIRTUALENGINE_INTERFACE;
@@ -529,6 +530,8 @@ struct MosStreamState
 
     bool forceMediaCompressedWrite              = false;    //!< Flag to force media compressed write
 
+    bool enableDecodeLowLatency                 = false;    //!< Flag to enable decode low latency by frequency boost
+
     bool simIsActive                            = false;    //!< Flag to indicate if Simulation is enabled
     MOS_NULL_RENDERING_FLAGS nullHwAccelerationEnable = {}; //!< To indicate which components to enable Null HW support
 
@@ -735,6 +738,7 @@ typedef struct _MOS_INTERFACE
 #endif // (_DEBUG || _RELEASE_INTERNAL)
 
     bool                            apoMosEnabled;                                //!< apo mos or not
+    bool                            apoMosForLegacyRuntime = false;
     std::vector<ResourceDumpAttri>  resourceDumpAttriArray;
 
     MEMORY_OBJECT_CONTROL_STATE (* pfnCachePolicyGetMemoryObject) (
@@ -2201,7 +2205,7 @@ struct _MOS_GPUCTX_CREATOPTIONS_ENHANCED : public _MOS_GPUCTX_CREATOPTIONS
 #if (_DEBUG || _RELEASE_INTERNAL)
         for (auto i = 0; i < MOS_MAX_ENGINE_INSTANCE_PER_CLASS; i++)
         {
-            EngineInstance[i] = 0xff;
+            EngineInstance[i] = MOS_INVALID_ENGINE_INSTANCE;
         }
 #endif
     }
@@ -2227,7 +2231,7 @@ struct _MOS_GPUCTX_CREATOPTIONS_ENHANCED : public _MOS_GPUCTX_CREATOPTIONS
 #if (_DEBUG || _RELEASE_INTERNAL)
             for (auto i = 0; i < MOS_MAX_ENGINE_INSTANCE_PER_CLASS; i++)
             {
-                EngineInstance[i] = 0xff;
+                EngineInstance[i] = MOS_INVALID_ENGINE_INSTANCE;
             }
 #endif
         }

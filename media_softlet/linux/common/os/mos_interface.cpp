@@ -2566,9 +2566,14 @@ MOS_STATUS MosInterface::DoubleBufferCopyResource(
             return MOS_STATUS_NULL_POINTER;
         }
     };
-
+    
+    void *mmd = nullptr;
+    if (mosDecompression && mosDecompression->GetMediaMemDecompState())
+    {
+        mmd = *mosDecompression->GetMediaMemDecompState();
+    }
     // If mmd device not registered, use media vebopx copy.
-    if (lbdMemDecomp() != MOS_STATUS_SUCCESS && mosDecompression && !mosDecompression->GetMediaMemDecompState())
+    if (lbdMemDecomp() != MOS_STATUS_SUCCESS && mosDecompression && !mmd)
     {
         MOS_OS_CRITICALMESSAGE("MMD device not registered. Use media copy instead.");
         status = MosInterface::UnifiedMediaCopyResource(streamState, inputResource, outputResource, MCPY_METHOD_BALANCE);
@@ -3820,6 +3825,7 @@ MOS_FORMAT MosInterface::GmmFmtToMosFmt(
         {GMM_FORMAT_R16G16B16A16_UNORM_TYPE, Format_A16B16G16R16},
         {GMM_FORMAT_R16G16B16A16_FLOAT_TYPE, Format_A16B16G16R16F},
         {GMM_FORMAT_R10G10B10A2_UNORM_TYPE, Format_R10G10B10A2},
+        {GMM_FORMAT_B10G10R10A2_UNORM_TYPE, Format_B10G10R10A2},
         {GMM_FORMAT_MFX_JPEG_YUV422H_TYPE, Format_422H},
         {GMM_FORMAT_MFX_JPEG_YUV411_TYPE, Format_411P},
         {GMM_FORMAT_MFX_JPEG_YUV422V_TYPE, Format_422V},
@@ -3902,6 +3908,7 @@ GMM_RESOURCE_FORMAT MosInterface::MosFmtToGmmFmt(MOS_FORMAT format)
         {Format_Y210,           GMM_FORMAT_Y210_TYPE},
         {Format_Y410,           GMM_FORMAT_Y410_TYPE},
         {Format_R10G10B10A2,    GMM_FORMAT_R10G10B10A2_UNORM_TYPE},
+        {Format_B10G10R10A2,    GMM_FORMAT_B10G10R10A2_UNORM_TYPE},
         {Format_A16B16G16R16F,  GMM_FORMAT_R16G16B16A16_FLOAT},
         {Format_R32G32B32A32F,  GMM_FORMAT_R32G32B32A32_FLOAT}
     };

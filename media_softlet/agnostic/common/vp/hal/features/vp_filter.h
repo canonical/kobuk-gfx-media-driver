@@ -461,6 +461,35 @@ struct _RENDER_FC_PARAMS
 using RENDER_FC_PARAMS  = _RENDER_FC_PARAMS;
 using PRENDER_FC_PARAMS = RENDER_FC_PARAMS *;
 
+
+struct OCL_FC_KERNEL_CONFIG
+{
+    VPHAL_PERFTAG perfTag = VPHAL_NONE;
+};
+
+struct OCL_FC_KERNEL_PARAM
+{
+    KERNEL_ARGS                  kernelArgs;
+    std::string                  kernelName;
+    VpKernelID                   kernelId;
+    uint32_t                     threadWidth;
+    uint32_t                     threadHeight;
+    uint32_t                     localWidth;
+    uint32_t                     localHeight;
+    KERNEL_ARG_INDEX_SURFACE_MAP kernelStatefulSurfaces;
+    OCL_FC_KERNEL_CONFIG         kernelConfig;
+    void                         Init();
+};
+
+using OCL_FC_KERNEL_PARAMS = std::vector<OCL_FC_KERNEL_PARAM>;
+struct _RENDER_OCL_FC_PARAMS
+{
+    OCL_FC_KERNEL_PARAMS fc_kernelParams = {};
+    void                 Init();
+};
+using RENDER_OCL_FC_PARAMS  = _RENDER_OCL_FC_PARAMS;
+using PRENDER_OCL_FC_PARAMS = RENDER_OCL_FC_PARAMS *;
+
 struct _RENDER_HDR_PARAMS
 {
     VpKernelID              kernelId;
@@ -596,7 +625,7 @@ public:
     virtual MOS_STATUS UpdateUnusedFeature(VP_EXECUTE_CAPS caps, SwFilter &feature, SwFilterPipe &featurePipe, SwFilterPipe &executePipe, bool isInputPipe, int index);
     FeatureType GetType();
     HwFilterParameter *GetHwFeatureParameterFromPool();
-    MOS_STATUS ReleaseHwFeatureParameter(HwFilterParameter *&pParam);
+    virtual MOS_STATUS ReleaseHwFeatureParameter(HwFilterParameter *&pParam);
 protected:
     FeatureType m_Type = FeatureTypeInvalid;
     std::vector<HwFilterParameter *> m_Pool;

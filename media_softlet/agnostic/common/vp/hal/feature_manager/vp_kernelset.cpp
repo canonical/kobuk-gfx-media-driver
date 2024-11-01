@@ -27,6 +27,7 @@
 //!
 #include "vp_kernelset.h"
 #include "vp_render_fc_kernel.h"
+#include "vp_render_ocl_fc_kernel.h"
 #include "vp_render_vebox_hdr_3dlut_kernel.h"
 #include "vp_render_vebox_hvs_kernel.h"
 #include "vp_render_hdr_kernel.h"
@@ -124,6 +125,15 @@ MOS_STATUS VpKernelSet::CreateSingleKernelObject(
     {
     case kernelCombinedFc:
         kernel = (VpRenderKernelObj*)MOS_New(VpRenderFcKernel, m_hwInterface, m_allocator);
+        VP_RENDER_CHK_NULL_RETURN(kernel);
+        break;
+    case kernelOclFcCommon:
+    case kernelOclFcFP:
+    case kernelOclFc420PL3Input:
+    case kernelOclFc420PL3Output:
+    case kernelOclFc444PL3Input:
+    case kernelOclFc444PL3Output:
+        kernel = (VpRenderKernelObj *)MOS_New(VpRenderOclFcKernel, m_hwInterface, kernelId, kernelIndex, m_allocator);
         VP_RENDER_CHK_NULL_RETURN(kernel);
         break;
     case kernelHdr3DLutCalc:
