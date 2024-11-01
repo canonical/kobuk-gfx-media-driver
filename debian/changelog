@@ -1,3 +1,9 @@
+intel-media-driver (24.4.2-0ubuntu1~24.04~ppa1) noble; urgency=medium
+
+  * Bump version to 24.4.2
+
+ -- Pavel Androniychuk <pavel.androniychuk@intel.com>  Fri, 01 Nov 2024 09:13:29 -0700
+
 intel-media-driver (24.3.1-0ubuntu1~24.04~ppa1) noble; urgency=medium
 
   * Adding noble for upload
