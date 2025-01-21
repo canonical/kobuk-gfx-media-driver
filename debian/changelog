@@ -1,3 +1,9 @@
+intel-media-driver (25.1.0-0ubuntu1~ppa1) oracular; urgency=medium
+
+  * Update version to 25.1.0
+
+ -- Pavel Androniychuk <pavel.androniychuk@intel.com>  Tue, 21 Jan 2025 10:51:57 -0800
+
 intel-media-driver (24.4.3-0ubuntu1~ppa1) oracular; urgency=medium
 
   * Bump version to 24.4.3
