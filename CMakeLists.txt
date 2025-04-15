@@ -20,7 +20,7 @@
 
 cmake_minimum_required(VERSION 3.5)
 project(IntelMediaDriver)
-set(MEDIA_VERSION "25.1.0${MEDIA_VERSION_EXTRA}" CACHE STRING "" FORCE)
+set(MEDIA_VERSION "25.2.0${MEDIA_VERSION_EXTRA}" CACHE STRING "" FORCE)
 
 
 
@@ -82,6 +82,7 @@ if (BUILD_KERNELS)
     add_subdirectory(Tools/MediaDriverTools)
 endif()
 
+enable_testing()
 add_subdirectory(media_driver)
 
 if("${LIBVA_DRIVERS_PATH}" STREQUAL "")
