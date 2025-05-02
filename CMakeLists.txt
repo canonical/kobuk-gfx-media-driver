@@ -82,7 +82,6 @@ if (BUILD_KERNELS)
     add_subdirectory(Tools/MediaDriverTools)
 endif()
 
-enable_testing()
 add_subdirectory(media_driver)
 
 if("${LIBVA_DRIVERS_PATH}" STREQUAL "")
