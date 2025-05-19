@@ -142,7 +142,7 @@ MOS_STATUS MhwInterfacesG12Tgllp::Initialize(
     CreateParams params,
     PMOS_INTERFACE osInterface)
 {
-#ifdef IGFX_VDENC_INTERFACE_EXT_SUPPORT
+#ifdef _MEDIA_RESERVED
     bool useBaseVdencInterface = false;
 #if (_DEBUG || _RELEASE_INTERNAL)
     MOS_USER_FEATURE_VALUE_DATA     UserFeatureData;
@@ -280,7 +280,7 @@ MOS_STATUS MhwInterfacesG12Tgllp::Initialize(
     }
     if (params.Flags.m_vdboxAll || params.Flags.m_vdenc)
     {
-#ifdef IGFX_VDENC_INTERFACE_EXT_SUPPORT
+#ifdef _MEDIA_RESERVED
 #if (_DEBUG || _RELEASE_INTERNAL)
         if(useBaseVdencInterface)
         {
@@ -333,7 +333,6 @@ void MhwInterfacesG12Tgllp::Destroy()
     }
 }
 
-#ifdef _MMC_SUPPORTED
 static bool tgllpRegisteredMmd =
     MediaFactory<uint32_t, MmdDevice>::
     Register<MmdDeviceG12Tgllp>((uint32_t)IGFX_TIGERLAKE_LP);
@@ -402,7 +401,6 @@ MhwInterfaces* MmdDeviceG12Tgllp::CreateMhwInterface(
 
     return mhw;
 }
-#endif
 
 static bool tgllpRegisteredMcpy =
     MediaFactory<uint32_t, McpyDevice>::
