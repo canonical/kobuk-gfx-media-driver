@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2022, Intel Corporation
+* Copyright (c) 2025, Intel Corporation
 *
 * Permission is hereby granted, free of charge, to any person obtaining a
 * copy of this software and associated documentation files (the "Software"),
@@ -20,30 +20,36 @@
 * OTHER DEALINGS IN THE SOFTWARE.
 */
 //!
-//! \file     encode_avc_basic_feature_xe3_lpm.cpp
-//! \brief    Defines the common interface for encode avc Xe3_LPM parameter
+//! \file     decode_hevc_basic_feature_xe3_lpm_base.h
+//! \brief    Defines the common interface for decode hevc basic feature
 //!
+#ifndef __DECODE_HEVC_BASIC_FEATURE_XE3_LPM_BASE_H__
+#define __DECODE_HEVC_BASIC_FEATURE_XE3_LPM_BASE_H__
 
-#include "encode_avc_basic_feature_xe3_lpm.h"
-#include "mhw_vdbox_vdenc_hwcmd_xe3_lpm.h"
+#include "decode_hevc_basic_feature.h"
+#include "codec_hw_xe3_lpm_base.h"
 
-namespace encode
+namespace decode
 {
-
-MHW_SETPAR_DECL_SRC(VDENC_PIPE_MODE_SELECT, AvcBasicFeatureXe3_Lpm)
+class HevcBasicFeatureXe3_Lpm_Base : public HevcBasicFeature
 {
-    AvcBasicFeature::MHW_SETPAR_F(VDENC_PIPE_MODE_SELECT)(params);
+public:
+    //!
+    //! \brief  HevcBasicFeature constructor
+    //!
+    HevcBasicFeatureXe3_Lpm_Base(DecodeAllocator *allocator, void *hwInterface, PMOS_INTERFACE osInterface);
 
-    if (m_seqParam->EnableStreamingBufferLLC || m_seqParam->EnableStreamingBufferDDR)
-    {
-        params.streamingBufferConfig = mhw::vdbox::vdenc::xe3_lpm_base::xe3_lpm::Cmd::VDENC_PIPE_MODE_SELECT_CMD::STREAMING_BUFFER_64;
-        params.captureMode           = mhw::vdbox::vdenc::xe3_lpm_base::xe3_lpm::Cmd::VDENC_PIPE_MODE_SELECT_CMD::CAPTURE_MODE_PARALLEFROMCAMERAPIPE;
-    }
+    //!
+    //! \brief  HevcBasicFeature deconstructor
+    //!
+    virtual ~HevcBasicFeatureXe3_Lpm_Base() {}
 
-    params.verticalShift32Minus1   = 0;
-    params.numVerticalReqMinus1    = 11;
+protected:
+    virtual MOS_STATUS CreateReferenceBeforeLoopFilter() override;
 
-    return MOS_STATUS_SUCCESS;
-}
+    MEDIA_CLASS_DEFINE_END(decode__HevcBasicFeatureXe3_Lpm_Base)
+};
 
-}  // namespace encode
+}  // namespace decode
+
+#endif  // !__DECODE_HEVC_BASIC_FEATURE_XE3_LPM_BASE_H__

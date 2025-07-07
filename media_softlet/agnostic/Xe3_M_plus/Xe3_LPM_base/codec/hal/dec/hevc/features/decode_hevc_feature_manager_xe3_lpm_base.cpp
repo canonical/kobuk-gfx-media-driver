@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2022, Intel Corporation
+* Copyright (c) 2025, Intel Corporation
 *
 * Permission is hereby granted, free of charge, to any person obtaining a
 * copy of this software and associated documentation files (the "Software"),
@@ -19,31 +19,29 @@
 * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 * OTHER DEALINGS IN THE SOFTWARE.
 */
+
 //!
-//! \file     encode_avc_basic_feature_xe3_lpm.cpp
-//! \brief    Defines the common interface for encode avc Xe3_LPM parameter
+//! \file     decode_hevc_feature_manager_xe3_lpm_base.cpp
+//! \brief    Defines the common interface for hevc decode feature manager
+//! \details  The hevc decode feature manager is further sub-divided by codec type
+//!           this file is for the base interface which is shared by all components.
 //!
 
-#include "encode_avc_basic_feature_xe3_lpm.h"
-#include "mhw_vdbox_vdenc_hwcmd_xe3_lpm.h"
+#include "decode_hevc_feature_manager_xe3_lpm_base.h"
+#include "decode_utils.h"
+#include "decode_hevc_basic_feature_xe3_lpm_base.h"
 
-namespace encode
+namespace decode
 {
-
-MHW_SETPAR_DECL_SRC(VDENC_PIPE_MODE_SELECT, AvcBasicFeatureXe3_Lpm)
+MOS_STATUS DecodeHevcFeatureManagerXe3_Lpm_Base::CreateFeatures(void *codecSettings)
 {
-    AvcBasicFeature::MHW_SETPAR_F(VDENC_PIPE_MODE_SELECT)(params);
+    DECODE_FUNC_CALL();
 
-    if (m_seqParam->EnableStreamingBufferLLC || m_seqParam->EnableStreamingBufferDDR)
-    {
-        params.streamingBufferConfig = mhw::vdbox::vdenc::xe3_lpm_base::xe3_lpm::Cmd::VDENC_PIPE_MODE_SELECT_CMD::STREAMING_BUFFER_64;
-        params.captureMode           = mhw::vdbox::vdenc::xe3_lpm_base::xe3_lpm::Cmd::VDENC_PIPE_MODE_SELECT_CMD::CAPTURE_MODE_PARALLEFROMCAMERAPIPE;
-    }
+    DECODE_CHK_STATUS(DecodeFeatureManager::CreateFeatures(codecSettings));
 
-    params.verticalShift32Minus1   = 0;
-    params.numVerticalReqMinus1    = 11;
+    HevcBasicFeature *decBasic = MOS_New(HevcBasicFeatureXe3_Lpm_Base, m_allocator, m_hwInterface, m_osInterface);
+    DECODE_CHK_STATUS(RegisterFeatures(FeatureIDs::basicFeature, decBasic));
 
     return MOS_STATUS_SUCCESS;
 }
-
-}  // namespace encode
+}  // namespace decode
